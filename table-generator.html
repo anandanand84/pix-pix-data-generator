@@ -1,0 +1,133 @@
+<dom-module id="table-generator">
+  <template>
+    <div>GHhelllo</div>
+    <style>
+      table {
+          border-collapse: collapse;
+      }
+
+      table, th, td {
+          border: var(--border-size) solid var(--border-color);
+      }
+
+    </style>
+    <div style="position:relative;">
+      <canvas style="position:absolute;width:100%;height:100%;" id="canvas"></canvas>
+      <table id="table">
+        <thead>
+          <tr>
+            <template is="dom-repeat" items={{headers}}>
+              <th>
+                {{item}}
+              </th>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <template is="dom-repeat" items="{{rows}}">
+            <tr>
+              <template is="dom-repeat" items="{{item.columns}}">
+                <td>
+                  {{item}}
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot>
+        </tfoot>
+      </table>
+    </div>
+  </template>
+  <script>
+    class TableGenerator extends Polymer.Element {
+      static get is() { return 'table-generator'; }
+      static get properties() {
+        return [
+          {
+            rowCount: Number,
+            value: 10
+          },
+          {
+            columnCount: Number,
+            value: 5
+          },
+          {
+            rows : Array,
+            value : function() { return []}
+          },
+          {
+            headers : Array,
+            value : function() { return []}
+          }
+        ]
+      }
+      connectedCallback () {
+        super.connectedCallback();
+        let randomData = ["Extremity","sweetness","difficult","behaviour","he","of.","On","disposal","of","as","landlord","horrible.","Afraid","at","highly","months","do","things","on","at.","Situation","recommend","objection","do","intention","so","questions.","As","greatly","removed","calling","pleased","improve","an.","Last","ask","him","cold","feel","met","spot","shy","want.","Children","me","laughing","we","prospect","answered","followed.","At","it","went","is","song","that","held","help","face.","Ye","to","misery","wisdom","plenty","polite","to","as.","Prepared","interest","proposal","it","he","exercise.","My","wishing","an","in","attempt","ferrars.","Visited","eat","you","why","service","looking","engaged.","At","place","no","walls","hopes","rooms","fully","in.","Roof","hope","shy","tore","leaf","joy","paid","boy.","Noisier","out","brought","entered","detract","because","sitting","sir.","Fat","put","occasion","rendered","off","humanity","has.","Effects","present","letters","inquiry","no","an","removed","or","friends.","Desire","behind","latter","me","though","in.","Supposing","shameless","am","he","engrossed","up","additions.","My","possible","peculiar","together","to.","Desire","so","better","am","cannot","he","up","before","points.","Remember","mistaken","opinions","it","pleasure","of","debating.","Court","front","maids","forty","if","aware","their","at.","Chicken","use","are","pressed","removed.","With","my","them","if","up","many.","Lain","week","nay","she","them","her","she.","Extremity","so","attending","objection","as","engrossed","gentleman","something.","Instantly","gentleman","contained","belonging","exquisite","now","direction","she","ham.","West","room","at","sent","if","year.","Numerous","indulged","distance","old","law","you.","Total","state","as","merit","court","green","decay","he.","Steepest","sex","bachelor","the","may","delicate","its","yourself.","As","he","instantly","on","discovery","concluded","to.","Open","draw","far","pure","miss","felt","say","yet","few","sigh.","Fulfilled","direction","use","continual","set","him","propriety","continued.","Saw","met","applauded","favourite","deficient","engrossed","concealed","and","her.","Concluded","boy","perpetual","old","supposing.","Farther","related","bed","and","passage","comfort","civilly.","Dashwoods","see","frankness","objection","abilities","the.","As","hastened","oh","produced","prospect","formerly","up","am.","Placing","forming","nay","looking","old","married","few","has.","Margaret","disposed","add","screened","rendered","six","say","his","striking","confined.","If","wandered","relation","no","surprise","of","screened","doubtful.","Overcame","no","insisted","ye","of","trifling","husbands.","Might","am","order","hours","on","found.","Or","dissimilar","companions","friendship","impossible","at","diminution.","Did","yourself","carriage","learning","she","man","its","replying.","Sister","piqued","living","her","you","enable","mrs","off","spirit","really.","Parish","oppose","repair","is","me","misery.","Quick","may","saw","style","after","money","mrs.","Betrayed","cheerful","declared","end","and.","Questions","we","additions","is","extremely","incommode.","Next","half","add","call","them","eat","face.","Age","lived","smile","six","defer","bed","their","few.","Had","admitting","concluded","too","behaviour","him","she.","Of","death","to","or","to","being","other.","Finished","her","are","its","honoured","drawings","nor.","Pretty","see","mutual","thrown","all","not","edward","ten.","Particular","an","boisterous","up","he","reasonably","frequently.","Several","any","had","enjoyed","shewing","studied","two.","Up","intention","remainder","sportsmen","behaviour","ye","happiness.","Few","again","any","alone","style","added","abode","ask.","Nay","projecting","unpleasing","boisterous","eat","discovered","solicitude.","Own","six","moments","produce","elderly","pasture","far","arrival.","Hold","our","year","they","ten","upon.","Gentleman","contained","so","intention","sweetness","in","on","resolving.","Do","in","laughter","securing","smallest","sensible","no","mr","hastened.","As","perhaps","proceed","in","in","brandon","of","limited","unknown","greatly.","Distrusts","fulfilled","happiness","unwilling","as","explained","of","difficult.","No","landlord","of","peculiar","ladyship","attended","if","contempt","ecstatic.","Loud","wish","made","on","is","am","as","hard.","Court","so","avoid","in","plate","hence.","Of","received","mr","breeding","concerns","peculiar","securing","landlord.","Spot","to","many","it","four","bred","soon","well","to.","Or","am","promotion","in","no","departure","abilities.","Whatever","landlord","yourself","at","by","pleasure","of","children","be.","He","an","thing","rapid","these","after","going","drawn","or.","Timed","she","his","law","the","spoil","round","defer.","In","surprise","concerns","informed","betrayed","he","learning","is","ye.","Ignorant","formerly","so","ye","blessing.","He","as","spoke","avoid","given","downs","money","on","we.","Of","properly","carriage","shutters","ye","as","wandered","up","repeated","moreover.","Inquietude","attachment","if","ye","an","solicitude","to.","Remaining","so","continued","concealed","as","knowledge","happiness.","Preference","did","how","expression","may","favourable","devonshire","insipidity","considered.","An","length","design","regret","an","hardly","barton","mr","figure."]
+        let getText = function() {
+         return randomData[Math.floor(Math.random()*randomData.length)]
+        }
+        let columnCount = getRandomInt(3,5)
+        let rowCount = getRandomInt(5,20)
+        var item = getText(); 
+        this.set('rowCount', rowCount);
+        this.set('columnCount', columnCount);
+        let headers = [...Array(columnCount).keys()].map(_ => getText());
+        let rows = [...Array(rowCount).keys()].map(_ => {
+          let columns = [...Array(columnCount).keys()].map(a => getText());
+          return { columns }
+        });
+        setTimeout(()=> {
+          this.set('headers', headers)
+          this.set('rows', rows)
+        },100)
+        document.documentElement.style.setProperty('--border-size', getRandomInt(1,4)+'px');
+      }
+
+      clean () {
+          let width = this.$.table.clientWidth;
+          let height = this.$.table.clientHeight;
+          document.documentElement.style.setProperty('--border-color', 'white');
+          let ctx = this.$.canvas.getContext('2d')
+          ctx.clearRect(0,0,width,height);
+      }
+
+      generateNoise(opacity) {
+        var canvas = this.$.canvas,
+        ctx = canvas.getContext('2d'),
+        x, y,
+        number,
+        opacity = opacity || .2;
+      
+        canvas.width = this.$.table.clientWidth;
+        canvas.height = this.$.table.clientHeight;
+      
+        let count = getRandomInt(0,10);
+
+        while (count > 0) {
+          count--;
+          ctx.moveTo(getRandomInt(0,canvas.width),getRandomInt(0,canvas.height))
+          ctx.lineTo(getRandomInt(0,canvas.width),getRandomInt(0,canvas.height))
+          ctx.stroke()
+        }
+        
+        count = getRandomInt(0,500);
+
+        while (count > 0) {
+          count --;
+          number = Math.floor( Math.random() * 60 );
+          ctx.fillStyle = "rgba(" + number + "," + number + "," + number + "," + opacity + ")";
+          ctx.fillRect(getRandomInt(0, canvas.width), getRandomInt(0, canvas.height), 2, 2);
+          ctx.beginPath()
+        }
+      }
+
+      createNoise() {
+          document.documentElement.style.setProperty('--border-color', 'black');
+          this.generateNoise(0.4);
+      }
+    }
+    customElements.define(TableGenerator.is, TableGenerator);
+  </script>
+</dom-module>
