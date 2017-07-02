@@ -1,51 +1,68 @@
-const url = 'http://localhost:9527/sample-data-generator.html';
+const url = 'http://localhost:8000/sample-data-generator.html';
 const fs = require('fs');
-
+const viewportWidth = 400;
+const viewportHeight = 400;
 const CDP = require('chrome-remote-interface');
 
-function loadForScrot(url) {
+function loadForScrot(url, tab) {
     return new Promise(async (fulfill, reject) => {
-        const tab = await CDP.New();
-        const client = await CDP({tab});
-        const {Page} = client;
-        Page.loadEventFired(() => {
-            fulfill({client, tab});
-        });
-        await Page.enable();
-        await Page.navigate({url});
+        try {
+            console.log(url);
+            console.log(tab);
+            const client = await CDP({ tab });
+            
+        } catch (e) {
+            console.log(e.message);
+        }
     });
 }
 
 function delay(duration) {
     return new Promise((fulfill, reject) => {
-        setTimeout(fullfill, duration);
+        setTimeout(fulfill, duration);
     })
 }
-
+let i = 1;
 async function process(urls) {
+    let options = {
+        format : 'jpeg',
+        quality : 100,
+    }
+    const tab = await CDP.New();
+    const client = await CDP({ tab });
+    const { Page, Runtime, Emulation } = client;
+    const deviceMetrics = {
+        width: viewportWidth,
+        height: viewportHeight,
+        deviceScaleFactor: 0,
+        mobile: false,
+        fitWindow: false,
+    };
+    await Emulation.setDeviceMetricsOverride(deviceMetrics);
+    await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
+
     try {
-        const handlers = await Promise.all(urls.map(loadForScrot));
-        for (const {client, tab} of handlers) {
-            const {Page} = client;
-            await CDP.Activate({id: tab.id});
+        while (i < 100000) {
+            i++;
+            await Page.enable();
+            await Page.navigate({ url });
+            await CDP.Activate({ id: tab.id });
             await delay(400);
-            const filename = `/tmp/scrot_${tab.id}.png`;
+            const filename = `${__dirname}/out/${i}.jpeg`;
             const result = await Page.captureScreenshot();
             const image = Buffer.from(result.data, 'base64');
             fs.writeFileSync(filename, image);
-            console.log(filename);
-            await client.close();
+            await Runtime.evaluate({ expression: 'generator.createNoise()' });
+            await delay(400);
+            const filename2 = `${__dirname}/out/noised/${i}.jpeg`;
+            const result2 = await Page.captureScreenshot();
+            const image2 = Buffer.from(result2.data, 'base64');
+            fs.writeFileSync(filename2, image2);
         }
     } catch (err) {
         console.error(err);
     }
+    await client.close();
 }
 
-process([url,
-         url,
-         url,
-         url,
-         url,
-         url,
-         url,
-         url]);
+process([url]);

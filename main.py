@@ -1,55 +1,76 @@
 from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D
-from keras.models import Model
+from keras.models import Model, Sequential
 from keras import backend as K
 from keras.callbacks import TensorBoard
 
-from keras.datasets import mnist
 import numpy as np
+import scipy.ndimage
 import cv2
+import os.path
+
+# original_datagen = ImageDataGenerator(rescale=1./255)
+# noised_datagen = ImageDataGenerator(rescale=1./255)
+
+# original = original_datagen.flow_from_directory(
+#         'data/original',
+#         target_size=(280, 280),
+#         batch_size=32,
+#         seed=1,
+#         class_mode=None)
+
+# noised = noised_datagen.flow_from_directory(
+#         'data/noised',
+#         target_size=(280, 280),
+#         batch_size=32,
+#         seed=1,
+#         class_mode=None)
 
 
+model = Sequential()
+model.add(Conv2D(160, (30, 30), activation='relu', padding='same', input_shape=(280,280,1)))
+model.add(MaxPooling2D((2, 2), padding='same'))
+model.add(Conv2D(80, (30, 30), activation='relu', padding='same'))
+model.add(MaxPooling2D((2, 2), padding='same'))
+model.add(Conv2D(80, (30, 30), activation='relu', padding='same'))
+model.add(MaxPooling2D((2, 2), padding='same'))
 
-input_img = Input(shape=(28, 28, 1), dtype='int', name='noised_input')  # adapt this if using `channels_first` image data format
-expected_img = Input(shape=(28, 28, 1), dtype='int', name='expected_output')
+# at this point the representation is (40, 40, 80) i.e. 128-dimensional
 
-x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
-x = MaxPooling2D((2, 2), padding='same')(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-x = MaxPooling2D((2, 2), padding='same')(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-encoded = MaxPooling2D((2, 2), padding='same')(x)
+model.add(Conv2D(80, (30, 30), activation='relu', padding='same'))
+model.add(UpSampling2D((2, 2)))
+model.add(Conv2D(80, (30, 30), activation='relu', padding='same'))
+model.add(UpSampling2D((2, 2)))
+model.add(Conv2D(160, (30, 30), activation='relu', padding='same'))
+model.add(UpSampling2D((2, 2)))
+model.add(Conv2D(1, (30, 30), activation='sigmoid', padding='same'))
+# (None, 7420, 7420, 10) but got array with shape (4, 280, 280, 1)
 
-# at this point the representation is (4, 4, 8) i.e. 128-dimensional
+model.compile(optimizer='adadelta', loss='binary_crossentropy')
 
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
-x = UpSampling2D((2, 2))(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-x = UpSampling2D((2, 2))(x)
-x = Conv2D(16, (3, 3), activation='relu')(x)
-x = UpSampling2D((2, 2))(x)
-decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
-
-autoencoder = Model(inputs=[input_img, expected_img],outputs=[decoded])
-autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
-
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 image = []
 image_noised = []
-output = []
-photo_count = 100
-while photo_count > 1:
-    original_image = scipy.ndimage.imread('original/'+photo_count+'.jpg', flatten=True)
-    cv2.resize(modified_image, (28, 28)).astype(np.float32)
-    noised_image = scipy.ndimage.imread('noised/'+photo_count+'.jpg', flatten=True)
-    photo_count++;
+output = np.array([])
+photo_count = 1
+while photo_count < 5:
+    photo_count = photo_count + 1
+    if os.path.isfile('out/'+str(photo_count)+'.jpeg'):
+        print 'loading file' + str(photo_count)
+        original_image = img_to_array(load_img('out/'+str(photo_count)+'.jpeg', grayscale=True, target_size=(280, 280)))
+        image.append(original_image)
+        noised_image = img_to_array(load_img('out/noised/'+str(photo_count)+'.jpeg', grayscale=True, target_size=(280, 280)))
+        image_noised.append(noised_image)
     pass
 
-autoencoder.fit({noised_input : image_noised, expected_output:image}, output,
+print np.asarray(image_noised).shape
+print np.asarray(image).shape
+
+model.fit(np.asarray(image_noised),np.asarray(image),
                 epochs=50,
                 batch_size=128,
-                shuffle=True,
-                validation_data=(x_test, x_test),
-                callbacks=[TensorBoard(log_dir='/tmp/autoencoder')])
+                verbose=1
+                )
 
-autoencoder.predict(x=[{noised_input : image_noised[2]}],batch_size=10, verbose=1)
-
-
+# autoencoder.f([noised, original]], 
+#                 epochs=50,
+#                 callbacks=[TensorBoard(log_dir='/tmp/autoencoder')])
