@@ -1,0 +1,3 @@
+pip install keras
+apt-get update -y
+apt-get install -y libopencv-dev python-opencv
