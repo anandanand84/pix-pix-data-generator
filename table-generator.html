@@ -57,6 +57,10 @@
             value : function() { return []}
           },
           {
+            borderSize : String,
+            value : '1px'
+          },
+          {
             headers : Array,
             value : function() { return []}
           }
@@ -82,7 +86,9 @@
           this.set('headers', headers)
           this.set('rows', rows)
         },100)
-        document.documentElement.style.setProperty('--border-size', getRandomInt(1,4)+'px');
+        let borderSize = getRandomInt(1,4)+'px';
+        this.set('borderSize', borderSize);
+        document.documentElement.style.setProperty('--border-size', borderSize);
       }
 
       clean () {

@@ -25,7 +25,7 @@ function delay(duration) {
 let i = 1;
 async function process(urls) {
     let options = {
-        format : 'jpeg',
+        format : 'jpg',
         quality : 100,
     }
     const tab = await CDP.New();
@@ -42,21 +42,23 @@ async function process(urls) {
     await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight});
 
     try {
-        while (i < 100000) {
+        while (i < 1000) {
             i++;
             await Page.enable();
             await Page.navigate({ url });
             await CDP.Activate({ id: tab.id });
             await delay(400);
-            const filename = `${__dirname}/out/${i}.jpeg`;
+            await Runtime.evaluate({ expression: 'generator.createNoise()' });
+            await delay(400);
+            const filename2 = `${__dirname}/out/noised/${i}.jpg`;
+            const result2 = await Page.captureScreenshot();
+            const image2 = Buffer.from(result2.data, 'base64');
+            await Runtime.evaluate({ expression: 'generator.clean()' });
+            await delay(400);
+            const filename = `${__dirname}/out/original/${i}.jpg`;
             const result = await Page.captureScreenshot();
             const image = Buffer.from(result.data, 'base64');
             fs.writeFileSync(filename, image);
-            await Runtime.evaluate({ expression: 'generator.createNoise()' });
-            await delay(400);
-            const filename2 = `${__dirname}/out/noised/${i}.jpeg`;
-            const result2 = await Page.captureScreenshot();
-            const image2 = Buffer.from(result2.data, 'base64');
             fs.writeFileSync(filename2, image2);
         }
     } catch (err) {
