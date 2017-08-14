@@ -50,12 +50,12 @@ async function process(urls) {
             await delay(400);
             await Runtime.evaluate({ expression: 'generator.createNoise()' });
             await delay(400);
-            const filename2 = `${__dirname}/out/noised/${i}.jpg`;
+            const filename2 = `${__dirname}/photos/noised/${i}.jpeg`;
             const result2 = await Page.captureScreenshot();
             const image2 = Buffer.from(result2.data, 'base64');
             await Runtime.evaluate({ expression: 'generator.clean()' });
             await delay(400);
-            const filename = `${__dirname}/out/original/${i}.jpg`;
+            const filename = `${__dirname}/photos/original/${i}.jpeg`;
             const result = await Page.captureScreenshot();
             const image = Buffer.from(result.data, 'base64');
             fs.writeFileSync(filename, image);
