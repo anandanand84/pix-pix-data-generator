@@ -1,2 +1,9 @@
 out
+<<<<<<< HEAD
 data
+=======
+data
+data.tar
+backup/
+saved_model/
+>>>>>>> 69191020aa7374ebaa0f9e9a5aa85c7c4a5fc5e0

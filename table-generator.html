@@ -57,10 +57,13 @@
             value : function() { return []}
           },
           {
+<<<<<<< HEAD
             borderSize : String,
             value : '1px'
           },
           {
+=======
+>>>>>>> 69191020aa7374ebaa0f9e9a5aa85c7c4a5fc5e0
             headers : Array,
             value : function() { return []}
           }
@@ -86,9 +89,13 @@
           this.set('headers', headers)
           this.set('rows', rows)
         },100)
+<<<<<<< HEAD
         let borderSize = getRandomInt(1,4)+'px';
         this.set('borderSize', borderSize);
         document.documentElement.style.setProperty('--border-size', borderSize);
+=======
+        document.documentElement.style.setProperty('--border-size', getRandomInt(1,4)+'px');
+>>>>>>> 69191020aa7374ebaa0f9e9a5aa85c7c4a5fc5e0
       }
 
       clean () {

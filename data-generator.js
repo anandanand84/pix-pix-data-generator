@@ -25,7 +25,7 @@ function delay(duration) {
 let i = 1;
 async function process(urls) {
     let options = {
-        format : 'jpg',
+        format : 'jpeg',
         quality : 100,
     }
     const tab = await CDP.New();
