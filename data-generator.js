@@ -25,7 +25,7 @@ function delay(duration) {
 let i = 1;
 async function process(urls) {
     let options = {
-        format : 'jpeg',
+        format : 'png',
         quality : 100,
     }
     const tab = await CDP.New();
@@ -49,13 +49,13 @@ async function process(urls) {
             await CDP.Activate({ id: tab.id });
             await delay(400);
             await Runtime.evaluate({ expression: 'generator.createNoise()' });
-            await delay(400);
-            const filename2 = `${__dirname}/photos/noised/${i}.jpeg`;
+            await delay(100);
+            const filename2 = `${__dirname}/photos/noised/${i}.png`;
             const result2 = await Page.captureScreenshot();
             const image2 = Buffer.from(result2.data, 'base64');
             await Runtime.evaluate({ expression: 'generator.clean()' });
-            await delay(400);
-            const filename = `${__dirname}/photos/original/${i}.jpeg`;
+            await delay(100);
+            const filename = `${__dirname}/photos/original/${i}.png`;
             const result = await Page.captureScreenshot();
             const image = Buffer.from(result.data, 'base64');
             fs.writeFileSync(filename, image);
