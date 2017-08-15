@@ -1,7 +1,7 @@
 const url = 'http://localhost:8000/sample-data-generator.html';
 const fs = require('fs');
-const viewportWidth = 400;
-const viewportHeight = 400;
+const viewportWidth = 1280;
+const viewportHeight = 1280;
 const CDP = require('chrome-remote-interface');
 
 function loadForScrot(url, tab) {
@@ -47,6 +47,9 @@ async function process(urls) {
             await Page.enable();
             await Page.navigate({ url });
             await CDP.Activate({ id: tab.id });
+            await Emulation.setDeviceMetricsOverride(deviceMetrics);
+            await Emulation.setVisibleSize({width: viewportWidth, height: viewportHeight });
+            await Emulation.setPageScaleFactor({pageScaleFactor:3});
             await delay(400);
             await Runtime.evaluate({ expression: 'generator.createNoise()' });
             await delay(100);
